@@ -4,12 +4,13 @@ import axios from "axios";
 import ProductContext from "./ProductContext";
 import ProductReducer from "./ProductReducer";
 
-import { GET_PRODUCTS, GET_PRODUCT } from "../types";
+import { GET_PRODUCTS, GET_PRODUCT, ADD_TO_CART } from "../types";
 
 const ProductState = (props) => {
   const initialState = {
     productsArray: [],
     selectedProduct: null,
+    cartArray: [],
   };
 
   const [state, dispatch] = useReducer(ProductReducer, initialState);
@@ -34,13 +35,26 @@ const ProductState = (props) => {
     }
   };
 
+  const addToCart = () => {
+    try{
+      const data = initialState.cartArray.push(initialState.selectedProduct)
+      dispatch({ type: ADD_TO_CART, payload: data})
+    } catch (error) {
+      console.log(error);
+    }
+    // initialState.cartArray.push(initialState.selectedProduct)
+    // console.log(initialState.cartArray)
+  }
+
   return (
     <ProductContext.Provider
       value={{
         productsArray: state.productsArray,
         selectedProduct: state.selectedProduct,
+        cartArray: state.cartArray,
         getProducts,
         getProduct,
+        addToCart,
       }}
     >
       {props.children}

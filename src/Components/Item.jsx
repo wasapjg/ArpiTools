@@ -21,7 +21,7 @@ import { Feather } from "@expo/vector-icons";
 const viewConfigRef = { viewAreaCoveragePercentThreshold: 95 };
 
 const Item = () => {
-  const { selectedProduct } = useContext(ProductContex);
+  const { selectedProduct, addToCart, cartArray } = useContext(ProductContex);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [show, setShow] = useState(false);
@@ -143,6 +143,7 @@ const Item = () => {
               w='60%'
               p='1'
               alignSelf={'center'}
+              onPress={async() => { await addToCart(), console.log(cartArray);}}
             >
               Agregar al Carrito
             </Button>
