@@ -6,7 +6,7 @@ import {
   StatusBar,
   Modal,
 } from "react-native";
-import React from "react";
+import React, {useContext} from "react";
 import { FONTS } from "../Constants";
 import {
   FontAwesome,
@@ -18,9 +18,12 @@ import {
 } from "@expo/vector-icons";
 import { Flex, Text, Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
+import ProductContext from "../Context/Products/ProductContext";
+
 
 const ModalReceipt = (props) => {
-  const navigation = useNavigation();
+
+  const { totalCart } = useContext(ProductContext)
 
   return (
     <Modal
@@ -44,7 +47,7 @@ const ModalReceipt = (props) => {
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate('Main')}
+          onPress={() => props.onClose()}
           style={{
             width: "100%",
             backgroundColor: "#4bd1a0",
@@ -91,7 +94,7 @@ const ModalReceipt = (props) => {
                 alignSelf: "center",
               }}
             >
-              <Text style={{ textAlign: "center" }}>1</Text>
+              <Text style={{ textAlign: "center" }}>{totalCart.quantity}</Text>
             </View>
           </View>
           <View
@@ -104,7 +107,7 @@ const ModalReceipt = (props) => {
               width: "45%",
             }}
           >
-            <Text style={[FONTS.h2, { color: "#cccccc" }]}>Total</Text>
+            <Text style={[FONTS.h2, { color: "#cccccc" }]}>Total: ${totalCart.total}</Text>
           </View>
         </View>
 

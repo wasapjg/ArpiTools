@@ -23,37 +23,13 @@ import MyAccount from "./src/screens/MyAccount";
 import PaymentMethod from "./src/screens/PaymentMethod";
 import Help from "./src/screens/Help";
 import ArpiTools from "./src/screens/ArpiTools";
+import MainHeader from "./src/Components/MainHeader";
 
 
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
-  // if (__DEV__) {
-  //   const ignoreWarns = [
-  //     "EventEmitter.removeListener",
-  //     "[fuego-swr-keys-from-collection-path]",
-  //     "Setting a timer for a long period of time",
-  //     "ViewPropTypes will be removed from React Native",
-  //     "AsyncStorage has been extracted from react-native",
-  //     "exported from 'deprecated-react-native-prop-types'.",
-  //     "Non-serializable values were found in the navigation state.",
-  //     "VirtualizedLists should never be nested inside plain ScrollViews",
-  //   ];
-  
-  //   const warn = console.warn;
-  //   console.warn = (...arg) => {
-  //     for (const warning of ignoreWarns) {
-  //       if (arg[0].startsWith(warning)) {
-  //         return;
-  //       }
-  //     }
-  //     warn(...arg);
-  //   };
-  
-  //   LogBox.ignoreLogs(ignoreWarns);
-  // }
 
   LogBox.ignoreAllLogs()
 
@@ -88,70 +64,80 @@ export default function App() {
               name="Main"
               component={Main}
               options={{
-                headerShown: false,
+                header: MainHeader,
+								headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="Cart"
               component={Cart}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="ItemScreen"
               component={ItemScreen}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="Receipt"
               component={Receipt}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="Buys"
               component={Buys}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="Favorites"
               component={Favorites}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="MyAccount"
               component={MyAccount}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="PaymentMethod"
               component={PaymentMethod}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="Help"
               component={Help}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
             <Stack.Screen
               name="ArpiTools"
               component={ArpiTools}
               options={{
-                headerShown: false,
+                header: MainHeader,
+                headerTransparent: false,
               }}
             />
           </Stack.Navigator>

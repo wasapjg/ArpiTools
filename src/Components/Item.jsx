@@ -17,11 +17,13 @@ import { useState } from "react";
 import ModalFlatImages from "./ModalFlatImages";
 import MainHeader from "./MainHeader";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { SUM_ALL } from "../Context/types";
 
 const viewConfigRef = { viewAreaCoveragePercentThreshold: 95 };
 
 const Item = () => {
-  const { selectedProduct, addToCart, cartArray } = useContext(ProductContex);
+  const { selectedProduct, addToCart, cartArray, sumAll } = useContext(ProductContex);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [show, setShow] = useState(false);
@@ -34,9 +36,10 @@ const Item = () => {
     }
   });
 
+  const navigation = useNavigation()
+
   return (
     <>
-      <MainHeader />
       <View style={{ height: SIZES.height, backgroundColor: '#1a1b1a' }}>
         <View style={{ paddingHorizontal: 10 }}>
           <View
@@ -114,12 +117,12 @@ const Item = () => {
               <View
                 style={{ backgroundColor: "#cccccc", flexDirection: "row", width: 60, alignItems: 'center', justifyContent: 'space-around', marginRight: 'auto', borderRadius: 10 }}
               >
-                <TouchableOpacity disabled={price === 1 ? true : false} onPress={() => setPrice(price - 1)}>
+                <TouchableOpacity disabled={price === 1} onPress={() => setPrice(price - 1)}>
                   <Text style={{fontSize: 30, color: price === 1 ? '#aaaaaa' : '#000000'}}>-</Text>
                 </TouchableOpacity>
                 <Text>{price}</Text>
-                <TouchableOpacity onPress={() => setPrice(price + 1)}>
-                  <Text style={{fontSize: 30}}>+</Text>
+                <TouchableOpacity onPress={() => setPrice(price + 1)} disabled={price === selectedProduct.stock}>
+                  <Text style={{fontSize: 30, color: price === selectedProduct.stock ? '#aaaaaa' : '#000000'}}>+</Text>
                 </TouchableOpacity>
               </View>
               <View
@@ -143,7 +146,9 @@ const Item = () => {
               w='60%'
               p='1'
               alignSelf={'center'}
-              onPress={async() => { await addToCart(), console.log(cartArray);}}
+              onPress={async() => { await addToCart(price), 
+                // await sumAll(price, selectedProduct.price + price),
+                 navigation.navigate('Main')}}
             >
               Agregar al Carrito
             </Button>

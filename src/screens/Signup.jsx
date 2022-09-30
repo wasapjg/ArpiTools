@@ -1,4 +1,11 @@
-import { StyleSheet, Image, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import {
   Box,
@@ -10,9 +17,23 @@ import {
   HStack,
   Flex,
 } from "native-base";
+import { FONTS } from "../Constants";
+
+// const TriangleCorner = (props) => {
+//   return (
+//     <>
+//       <View style={[styles.triangleCorner, props.style]} />
+//       <View style={[styles.triangleCorner, props.style]} />
+//     </>
+//   );
+// };
+// const Rectangle = () => {
+//   return <View style={styles.rectangle} />;
+// };
 
 const Signup = (props) => {
   const [step, setStep] = useState(1);
+  const [type, setType] = useState("");
 
   return (
     <Flex bg="#ffffff" h={"100%"} w={"100%"} justify="center" align="center">
@@ -63,6 +84,94 @@ const Signup = (props) => {
               </Pressable>
             </HStack>
           </VStack>
+        ) : step == 2 ? (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "80%",
+                marginTop: 25,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => setType("ferreteria")}
+                style={[
+                  type === "ferreteria"
+                    ? { backgroundColor: "#4BD1A0" }
+                    : { backgroundColor: "transparent" },
+                  {
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 2,
+                    borderColor: "#4BD1A0",
+                    width: "50%",
+                    padding: 10,
+                    borderBottomLeftRadius: 5,
+                    borderTopLeftRadius: 5,
+                  },
+                ]}
+              >
+                {/* <View style={{ flexDirection: "row", alignSelf: "center" }}>
+                    <Rectangle />
+                    <TriangleCorner />
+                  </View> */}
+
+                <Text style={[FONTS.body3, { color: "#cccccc" }]}>
+                  Ferreteria
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setType("constructora")}
+                style={[
+                  type === "constructora"
+                    ? { backgroundColor: "#4BD1A0" }
+                    : { backgroundColor: "transparent" },
+                  {
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 2,
+                    borderColor: "#4BD1A0",
+                    width: "50%",
+                    padding: 10,
+                    borderBottomRightRadius: 5,
+                    borderTopRightRadius: 5,
+                  },
+                ]}
+              >
+                <Text style={[FONTS.body3, { color: "#cccccc" }]}>
+                  Constructora
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <VStack space={3} mt="2">
+              <FormControl>
+                <FormControl.Label>Nombre y Apellido</FormControl.Label>
+                <Input placeholder="Nombre y Apellido" fontSize={20} />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Telefono</FormControl.Label>
+                <Input placeholder="Ingresar su telefono" fontSize={20} />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Email</FormControl.Label>
+                <Input placeholder="Ingresar su email" fontSize={20} />
+              </FormControl>
+
+              <Button
+                mt="2"
+                backgroundColor="#4BD1A0"
+                size="lg"
+                borderRadius={10}
+                onPress={() => {
+                  setStep(3);
+                }}
+              >
+                Continuar
+              </Button>
+            </VStack>
+          </>
         ) : (
           <VStack space={3} mt="5">
             <FormControl>
@@ -75,20 +184,13 @@ const Signup = (props) => {
             </FormControl>
             <FormControl>
               <FormControl.Label>Contraseña</FormControl.Label>
-              <Input
-                placeholder="Ingresar contraseña"
-              
-                fontSize={20}
-              />
+              <Input placeholder="Ingresar contraseña" fontSize={20} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Confirmación contraseña</FormControl.Label>
-              <Input
-                placeholder="Reingresar contraseña"
-              
-                fontSize={20}
-              />
+              <Input placeholder="Reingresar contraseña" fontSize={20} />
             </FormControl>
+
             <Button
               mt="2"
               backgroundColor="#4BD1A0"
@@ -109,4 +211,25 @@ const Signup = (props) => {
 
 export default Signup;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  triangleCorner: {
+    width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderRightWidth: 40,
+    borderTopWidth: 40,
+    borderRightColor: "#4BD1A0",
+    borderTopColor: "transparent",
+  },
+  rectangle: {
+    width: 50 * 2,
+    height: 40,
+    backgroundColor: "transparent",
+    borderColor: "#4BD1A0",
+    borderWidth: 2,
+    borderRightWidth: 0,
+    borderBottomLeftRadius: 5,
+    borderTopLeftRadius: 5,
+  },
+});

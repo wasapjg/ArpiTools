@@ -1,15 +1,18 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import MainHeader from "../Components/MainHeader";
 import ItemsCart from "../Components/ItemsCart";
 import { Button } from "native-base";
 import { FONTS, SIZES } from "../Constants";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
+import ProductContex from "../Context/Products/ProductContext";
 
 const Cart = ( props ) => {
   const scrollView = useRef();
 
   const [scrollEnd, setScrollEnd] = useState(false)
+
+    const { cartArray, dataRecipe } = useContext(ProductContex);
 
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -23,9 +26,26 @@ const Cart = ( props ) => {
     );
   };
 
+  let totalArr = []
+
+  const sumall = cartArray.map(item => item.quantity).reduce((prev, curr) => prev + curr, 0);
+
+  // let multi = cartArray.map(item => item.product.price).reduce((prev, curr) => prev + curr, 0)
+
+  // multi = multi * selectedProduct.map(item => item.quantity)
+
+  // totalArr.push( ...totalArr, multi)
+
+  // console.log( 'TOTALARR _____________' ,totalArr);
+
+  for(i = 0; i < cartArray.length; i++) {
+    totalArr.push(cartArray[i].product.price * cartArray[i].quantity)
+  }
+
+  let total = totalArr.reduce((a, b) => a + b, 0)
+
   return (
     <>
-      <MainHeader cart={true} />
       <ScrollView
         style={{ backgroundColor: "#1a1b1a" }}
         ref={scrollView}
@@ -38,7 +58,7 @@ const Cart = ( props ) => {
         }}
       >
         <TouchableOpacity
-          onPress={() => props.navigation.goBack()}
+          onPress={() => props.navigation.navigate('Main')}
           style={{
             width: "100%",
             backgroundColor: "#4bd1a0",
@@ -60,19 +80,9 @@ const Cart = ( props ) => {
           </Text>
         </TouchableOpacity>
         <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
-        <ItemsCart />
       </ScrollView>
       <View style={{ position: "relative" }}>
-        {scrollEnd ? (
+        {scrollEnd || cartArray.length < 5 ? (
           <></>
         ) : (
           <Button
@@ -89,7 +99,9 @@ const Cart = ( props ) => {
             <FontAwesome name="angle-double-down" size={24} color="white" />
           </Button>
         )}
-        <View style={{ backgroundColor: "#1a1b1a" }}>
+        {
+          cartArray.length ?
+          <View style={{ backgroundColor: "#1a1b1a" }}>
           <View
             style={{
               flexDirection: "row",
@@ -117,7 +129,7 @@ const Cart = ( props ) => {
                   alignSelf: "center",
                 }}
               >
-                <Text style={{ textAlign: "center" }}>1</Text>
+                <Text style={{ textAlign: "center" }}>{sumall}</Text>
               </View>
             </View>
             <View
@@ -129,7 +141,7 @@ const Cart = ( props ) => {
                 alignSelf: "center",
               }}
             >
-              <Text style={[FONTS.h2, { color: "#cccccc" }]}>Total</Text>
+              <Text style={[FONTS.h2, { color: "#cccccc" }]}>Total: ${total}</Text>
             </View>
           </View>
           <Button
@@ -142,7 +154,7 @@ const Cart = ( props ) => {
             w="60%"
             p="1"
             alignSelf={"center"}
-            onPress={() => props.navigation.navigate('Receipt')}
+            onPress={() => {dataRecipe(sumall, total) ,props.navigation.navigate('Receipt')}}
             _text={{
               color: '#000000',
               fontSize: 20,
@@ -152,6 +164,11 @@ const Cart = ( props ) => {
             Comprar
           </Button>
         </View>
+        
+        :
+
+        <></>
+      }
       </View>
     </>
   );

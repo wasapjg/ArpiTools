@@ -1,19 +1,29 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useRef } from "react";
 import axios from "axios";
 
 import ProductContext from "./ProductContext";
+import { RemoveCartContext } from "./ProductContext";
 import ProductReducer from "./ProductReducer";
 
-import { GET_PRODUCTS, GET_PRODUCT, ADD_TO_CART } from "../types";
+import { GET_PRODUCTS, GET_PRODUCT, ADD_TO_CART, DELETE_ITEM_CART, SUM_ALL, DELETE_ALL_CART, SERCH_PRODUCT, SERCH_VALUE } from "../types";
+import { useCallback } from "react";
 
 const ProductState = (props) => {
   const initialState = {
+    constProductArray: [],
     productsArray: [],
     selectedProduct: null,
     cartArray: [],
+    totalCart: {
+      quantity: 0,
+      total: 0,
+    },
   };
 
   const [state, dispatch] = useReducer(ProductReducer, initialState);
+
+  const itemRef = useRef(state.cartArray);
+  itemRef.current = state.cartArray;
 
   const getProducts = async () => {
     try {
@@ -35,30 +45,96 @@ const ProductState = (props) => {
     }
   };
 
-  const addToCart = () => {
-    try{
-      const data = initialState.cartArray.push(initialState.selectedProduct)
-      dispatch({ type: ADD_TO_CART, payload: data})
+  const serchProduct = async (product) => {
+    let arr = []
+    try {
+      if(product.length > 0){
+        arr.push(product)
+        const data = arr[0]
+        dispatch({ type: SERCH_PRODUCT, payload: data });
+        console.log(state.productsArray);
+      }else{
+        getProducts()
+      }
     } catch (error) {
       console.log(error);
     }
-    // initialState.cartArray.push(initialState.selectedProduct)
-    // console.log(initialState.cartArray)
   }
 
+  const addToCart = (quantity) => {
+    let arr = [];
+    try {
+      arr.push(...state.cartArray, {product: state.selectedProduct, quantity: quantity});
+      const data = arr;
+
+      dispatch({ type: ADD_TO_CART, payload: data });
+      console.log(state.cartArray);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeAllCart = () => {
+    try{
+      let data = initialState.cartArray
+      dispatch({type: DELETE_ALL_CART, payload: data})
+    }
+    catch (error){
+      console.log(error);
+    }
+  }
+
+  const dataRecipe = (quantity, total) => {
+    try {
+      const data = state.totalCart = {
+        quantity: quantity,
+        total: total
+      }
+      dispatch({type: SUM_ALL, payload: data})
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
+  const serchValue = (value) => {
+    try{
+      let data = value
+      dispatch({type: SERCH_VALUE, payload: data})
+    }
+    catch(error) {
+      console.log(error);
+    }
+  }
+
+
   return (
-    <ProductContext.Provider
-      value={{
-        productsArray: state.productsArray,
-        selectedProduct: state.selectedProduct,
-        cartArray: state.cartArray,
-        getProducts,
-        getProduct,
-        addToCart,
-      }}
+    <RemoveCartContext.Provider
+      value={useCallback((item) => {
+        const newItems = itemRef.current.filter(
+          (_item) => _item.product.id !== item.product.id
+        );
+        dispatch({ type: DELETE_ITEM_CART, payload: newItems });
+      }, [])}
     >
-      {props.children}
-    </ProductContext.Provider>
+      <ProductContext.Provider
+        value={{
+          constProductArray: state.constProductArray,
+          productsArray: state.productsArray,
+          selectedProduct: state.selectedProduct,
+          cartArray: state.cartArray,
+          totalCart: state.totalCart,
+          getProducts,
+          getProduct,
+          addToCart,
+          dataRecipe,
+          removeAllCart,
+          serchProduct,
+        }}
+      >
+        {props.children}
+      </ProductContext.Provider>
+    </RemoveCartContext.Provider>
   );
 };
 
