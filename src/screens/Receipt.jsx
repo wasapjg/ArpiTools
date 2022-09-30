@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import MainHeader from "../Components/MainHeader";
 import { FONTS } from "../Constants";
 import {
@@ -22,14 +22,17 @@ import {
 } from "@expo/vector-icons";
 import DocPicker from "../Components/DocPicker";
 import ModalReceipt from "../Components/ModalReceipt";
+import ProductContext from "../Context/Products/ProductContext";
 
 const Receipt = (props) => {
 
   const [show, setShow] = useState(false)
 
+  const { totalCart, removeAllCart } = useContext(ProductContext);
+
+
   return (
     <>
-      <MainHeader cart={true} />
       <ScrollView style={{ backgroundColor: "#1a1b1a" }}>
       <TouchableOpacity
           onPress={() => props.navigation.goBack()}
@@ -78,7 +81,7 @@ const Receipt = (props) => {
                 alignSelf: "center",
               }}
             >
-              <Text style={{ textAlign: "center" }}>1</Text>
+              <Text style={{ textAlign: "center" }}>{totalCart.quantity}</Text>
             </View>
           </View>
           <View
@@ -91,7 +94,7 @@ const Receipt = (props) => {
               width: "45%",
             }}
           >
-            <Text style={[FONTS.h2, { color: "#cccccc" }]}>Total</Text>
+            <Text style={[FONTS.h2, { color: "#cccccc" }]}>Total: {totalCart.total}</Text>
           </View>
         </View>
         <FormControl px={10} mt={5}>
@@ -144,7 +147,7 @@ const Receipt = (props) => {
       </ScrollView>
       <ModalReceipt 
         visible={show}
-        onRequestClose={ () => setShow(false) }
+        onClose={ () => {setShow(false), props.navigation.navigate('Main'), removeAllCart()} }
       />
     </>
   );

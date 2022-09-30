@@ -19,6 +19,7 @@ import {
 } from "native-base";
 import { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { postUser } from "../Action/postUser";
 
 const LoginEmail = (props) => {
   const [forgot, setForgot] = useState(false);
@@ -65,7 +66,8 @@ const LoginEmail = (props) => {
               backgroundColor="#4BD1A0"
               size="lg"
               borderRadius={10}
-              onPress={() => {
+              onPress={async () => {
+                await postUser(),
                 props.navigation.navigate("Main");
               }}
             >

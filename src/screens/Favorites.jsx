@@ -25,7 +25,6 @@ const Favorites = (props) => {
 
   return (
     <>
-      <MainHeader cart={true} />
       <ScrollView
         style={{ backgroundColor: "#1a1b1a" }}
         ref={scrollView}

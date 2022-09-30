@@ -13,7 +13,6 @@ const Main = (props) => {
 
   return (
     <>
-      <MainHeader cart={false} />
       <ScrollView style={{backgroundColor: '#1a1b1a'}}>
         <Items onPress={() => {
           props.navigation.navigate('ItemScreen')}}/>

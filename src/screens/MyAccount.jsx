@@ -15,7 +15,6 @@ import { Button } from 'native-base';
 const MyAccount = (props) => {
   return (
     <>
-      <MainHeader cart={false}/>
       <View style={{width: '100%', height: '100%', backgroundColor: '#1a1b1a'}}>
       <TouchableOpacity
           onPress={() => props.navigation.navigate('Main')}
