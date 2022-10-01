@@ -66,8 +66,7 @@ const LoginEmail = (props) => {
               backgroundColor="#4BD1A0"
               size="lg"
               borderRadius={10}
-              onPress={async () => {
-                await postUser(),
+              onPress={() => {
                 props.navigation.navigate("Main");
               }}
             >
@@ -99,7 +98,8 @@ const LoginEmail = (props) => {
               backgroundColor="#4BD1A0"
               size="lg"
               borderRadius={10}
-              onPress={() => {
+              onPress={async () => {
+                await postUser(),
                 props.navigation.navigate("Main");
               }}
             >
