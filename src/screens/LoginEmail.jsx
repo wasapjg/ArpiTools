@@ -3,7 +3,7 @@ import {
   Text,
   Image,
   Pressable,
-  TouchableOpacity,
+  TouchableOpacity, Alert,
 } from "react-native";
 import React from "react";
 import {
@@ -17,12 +17,50 @@ import {
   HStack,
   Flex,
 } from "native-base";
-import { useState } from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { postUser } from "../Action/postUser";
+import {useState} from "react";
+import {FontAwesome5} from "@expo/vector-icons";
+import {postUser} from "../Action/postUser";
+import {validateEmail, validatePassword} from "../Utils/Validations";
+import {isEmpty} from "lodash";
+import api from "../Services/Api";
 
 const LoginEmail = (props) => {
   const [forgot, setForgot] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onContinue = async () => {
+    if (forgot) {
+      const emailError = validateEmail(email);
+      if (!isEmpty(emailError)) {
+        Alert.alert('Error', emailError)
+        return;
+      }
+      props.navigation.navigate("Main");
+    } else {
+      const emailError = validateEmail(email);
+      if (!isEmpty(emailError)) {
+        Alert.alert('Error', emailError)
+        return;
+      }
+      const passwordError = validatePassword(password);
+      if (!isEmpty(passwordError)) {
+        Alert.alert('Error', passwordError)
+        return;
+      }
+      api.post('auth/local', {
+        identifier: email,
+        password
+      }).then(res => {
+        console.log(res)
+        props.navigation.navigate("Main");
+      }).catch(err => {
+        Alert.alert('Error', err.response.data.error.message)
+        console.error(err.response.data)
+      })
+
+    }
+  }
 
   return (
     <Flex bg="#ffffff" h={"100%"} w={"100%"} justify="center" align="center">
@@ -30,24 +68,24 @@ const LoginEmail = (props) => {
         bg="#000000"
         h={"200%"}
         w={"170%"}
-        style={{ transform: [{ rotate: "-45deg" }], position: "absolute" }}
+        style={{transform: [{rotate: "-45deg"}], position: "absolute"}}
       ></Box>
       <Box style={{position: 'relative'}}>
         {forgot ? (
           <TouchableOpacity
-          style={{ position: "absolute", top: -30, left: 0 }}
-          onPress={() =>setForgot(false)}
-        >
-          <FontAwesome5 name="arrow-left" size={24} color={"white"} />
-        </TouchableOpacity>
+            style={{position: "absolute", top: -30, left: 0}}
+            onPress={() => setForgot(false)}
+          >
+            <FontAwesome5 name="arrow-left" size={24} color={"white"}/>
+          </TouchableOpacity>
         ) : (
           <></>
         )}
-        <Image source={require("../../assets/LogoNombre.png")} alt="" />
+        <Image source={require("../../assets/LogoNombre.png")} alt=""/>
         <Heading
           size="xl"
           fontWeight="800"
-          color= {forgot ? '#cccccc' : '#ffffff'}
+          color={forgot ? '#cccccc' : '#ffffff'}
           _dark={{
             color: "warmGray.50",
           }}
@@ -59,27 +97,32 @@ const LoginEmail = (props) => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
-              <Input placeholder="Ingresa tu Email" />
+              <Input
+                placeholder="Ingresa tu Email"
+                style={{color: 'white'}}
+                fontSize={20}
+                onChangeText={setEmail}
+                value={email}
+                keyboardType="email-address"
+              />
             </FormControl>
             <Button
               mt="2"
               backgroundColor="#4BD1A0"
               size="lg"
               borderRadius={10}
-              onPress={() => {
-                props.navigation.navigate("Main");
-              }}
+              onPress={onContinue}
             >
               Continuar
             </Button>
             <HStack mt="6" justifyContent="center">
-              <Text style={{ color: "white" }}>No tienes una cuenta?</Text>
+              <Text style={{color: "white"}}>No tienes una cuenta?</Text>
               <Pressable
                 onPress={() => {
                   props.navigation.navigate("Signup");
                 }}
               >
-                <Text style={{ color: "#4BD1A0" }}> Registrate Aqui</Text>
+                <Text style={{color: "#4BD1A0"}}> Registrate Aqui</Text>
               </Pressable>
             </HStack>
           </VStack>
@@ -87,32 +130,43 @@ const LoginEmail = (props) => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
-              <Input placeholder="Ingresa tu Email" />
+              <Input
+                placeholder="Ingresa tu Email"
+                style={{color: 'white'}}
+                fontSize={20}
+                onChangeText={setEmail}
+                value={email}
+              />
             </FormControl>
             <FormControl>
               <FormControl.Label>Contraseña</FormControl.Label>
-              <Input type="password" placeholder="Ingresa tu Contraseña" />
+              <Input
+                style={{color: 'white'}}
+                type="password"
+                placeholder="Ingresa tu Contraseña"
+                fontSize={20}
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry
+              />
             </FormControl>
             <Button
               mt="2"
               backgroundColor="#4BD1A0"
               size="lg"
               borderRadius={10}
-              onPress={async () => {
-                await postUser(),
-                props.navigation.navigate("Main");
-              }}
+              onPress={onContinue}
             >
               Continuar
             </Button>
             <HStack mt="6" justifyContent="center">
-              <Text style={{ color: "white" }}>Soy un nuevo usuario.</Text>
+              <Text style={{color: "white"}}>Soy un nuevo usuario.</Text>
               <Pressable
                 onPress={() => {
                   props.navigation.navigate("Signup");
                 }}
               >
-                <Text style={{ color: "#4BD1A0" }}> Registrate Aqui</Text>
+                <Text style={{color: "#4BD1A0"}}> Registrate Aqui</Text>
               </Pressable>
             </HStack>
             <Pressable
@@ -120,7 +174,7 @@ const LoginEmail = (props) => {
                 setForgot(true);
               }}
             >
-              <Text style={{ color: "#4BD1A0", alignSelf: "center" }}>
+              <Text style={{color: "#4BD1A0", alignSelf: "center"}}>
                 {" "}
                 Olvidé mi Contraseña
               </Text>

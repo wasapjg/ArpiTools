@@ -27,6 +27,7 @@ import MainHeader from "./src/Components/MainHeader";
 
 
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {

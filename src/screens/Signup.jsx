@@ -4,9 +4,9 @@ import {
   Text,
   Pressable,
   TouchableOpacity,
-  View,
+  View, Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   Box,
   Heading,
@@ -17,7 +17,18 @@ import {
   HStack,
   Flex,
 } from "native-base";
-import { FONTS } from "../Constants";
+import {FONTS} from "../Constants";
+import {isEmpty} from 'lodash'
+import {
+  validateCodeArpi,
+  validateConfirmPassword,
+  validateEmail,
+  validateName,
+  validatePassword,
+  validatePhone,
+  validateRuc, validateType
+} from "../Utils/Validations";
+import api from "../Services/Api";
 
 // const TriangleCorner = (props) => {
 //   return (
@@ -34,6 +45,86 @@ import { FONTS } from "../Constants";
 const Signup = (props) => {
   const [step, setStep] = useState(1);
   const [type, setType] = useState("");
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [ruc, setRuc] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const onContinue = () => {
+    const codeError = validateCodeArpi(code);
+    if (!isEmpty(codeError)) {
+      Alert.alert('Error', codeError)
+      return;
+    } else {
+      if (step === 1) {
+        setStep(2)
+        return;
+      }
+
+    }
+    const typeError = validateType(type);
+    if (!isEmpty(typeError)) {
+      Alert.alert('Error', typeError)
+      return;
+    }
+    const nameError = validateName(name);
+    if (!isEmpty(nameError)) {
+      Alert.alert('Error', nameError)
+      return;
+    }
+    const phoneError = validatePhone(phone);
+    if (!isEmpty(phoneError)) {
+      Alert.alert('Error', phoneError)
+      return;
+    } else {
+      if (step === 2) {
+        setStep(3)
+        return;
+      }
+    }
+    const emailError = validateEmail(email);
+    if (!isEmpty(emailError)) {
+      Alert.alert('Error', emailError)
+      return;
+    }
+    const rucError = validateRuc(ruc);
+    if (!isEmpty(rucError)) {
+      Alert.alert('Error', rucError)
+      return;
+    }
+    const passwordError = validatePassword(password);
+    if (!isEmpty(passwordError)) {
+      Alert.alert('Error', passwordError)
+      return;
+    }
+    const confirmPasswordError = validateConfirmPassword(password, confirmPassword);
+    if (!isEmpty(confirmPasswordError)) {
+      Alert.alert('Error', confirmPasswordError)
+      return;
+    }
+
+    api.post('auth/local/register', {
+      username: name + ruc, // Add username value here
+      fullname: name,
+      email: email,
+      password: password,
+      RUC: ruc,
+      address: "Evergreen ave 345, Dallas", // TODO Add address value here
+      arpicode: code,
+      distribuitor: type === "ferreteria"  // TODO Add distribuitor value here
+
+    }).then(res => {
+      console.log('res', res)
+      props.navigation.navigate("Main");
+    }).catch(error => {
+      Alert.alert('Error', error.response.data.error.message)
+      console.error(error.response.data)
+    });
+
+  }
 
   return (
     <Flex bg="#ffffff" h={"100%"} w={"100%"} justify="center" align="center">
@@ -41,10 +132,10 @@ const Signup = (props) => {
         bg="#000000"
         h={"200%"}
         w={"170%"}
-        style={{ transform: [{ rotate: "-45deg" }], position: "absolute" }}
+        style={{transform: [{rotate: "-45deg"}], position: "absolute"}}
       ></Box>
       <Box>
-        <Image source={require("../../assets/LogoNombre.png")} alt="" />
+        <Image source={require("../../assets/LogoNombre.png")} alt=""/>
         <Heading
           size="xl"
           fontWeight="800"
@@ -60,27 +151,33 @@ const Signup = (props) => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Codigo de vendedor</FormControl.Label>
-              <Input placeholder="Código Arpi" fontSize={20} />
+              <Input
+                style={{color: 'white'}}
+                placeholder="Código Arpi"
+                fontSize={20}
+                keyboardType={'numeric'}
+                maxLength={8}
+                onChangeText={setCode}
+                value={code}
+              />
             </FormControl>
             <Button
               mt="2"
               backgroundColor="#4BD1A0"
               size="lg"
               borderRadius={10}
-              onPress={() => {
-                setStep(2);
-              }}
+              onPress={onContinue}
             >
               Continuar
             </Button>
             <HStack mt="6" justifyContent="center">
-              <Text style={{ color: "white" }}>Tenes cuenta?</Text>
+              <Text style={{color: "white"}}>Tenes cuenta?</Text>
               <Pressable
                 onPress={() => {
                   props.navigation.navigate("LoginEmail");
                 }}
               >
-                <Text style={{ color: "#4BD1A0" }}> Inicia Sesión</Text>
+                <Text style={{color: "#4BD1A0"}}> Inicia Sesión</Text>
               </Pressable>
             </HStack>
           </VStack>
@@ -99,8 +196,8 @@ const Signup = (props) => {
                 onPress={() => setType("ferreteria")}
                 style={[
                   type === "ferreteria"
-                    ? { backgroundColor: "#4BD1A0" }
-                    : { backgroundColor: "transparent" },
+                    ? {backgroundColor: "#4BD1A0"}
+                    : {backgroundColor: "transparent"},
                   {
                     justifyContent: "center",
                     alignItems: "center",
@@ -118,7 +215,7 @@ const Signup = (props) => {
                     <TriangleCorner />
                   </View> */}
 
-                <Text style={[FONTS.body3, { color: "#cccccc" }]}>
+                <Text style={[FONTS.body3, {color: "#cccccc"}]}>
                   Ferreteria
                 </Text>
               </TouchableOpacity>
@@ -126,8 +223,8 @@ const Signup = (props) => {
                 onPress={() => setType("constructora")}
                 style={[
                   type === "constructora"
-                    ? { backgroundColor: "#4BD1A0" }
-                    : { backgroundColor: "transparent" },
+                    ? {backgroundColor: "#4BD1A0"}
+                    : {backgroundColor: "transparent"},
                   {
                     justifyContent: "center",
                     alignItems: "center",
@@ -140,7 +237,7 @@ const Signup = (props) => {
                   },
                 ]}
               >
-                <Text style={[FONTS.body3, { color: "#cccccc" }]}>
+                <Text style={[FONTS.body3, {color: "#cccccc"}]}>
                   Constructora
                 </Text>
               </TouchableOpacity>
@@ -148,15 +245,23 @@ const Signup = (props) => {
             <VStack space={3} mt="2">
               <FormControl>
                 <FormControl.Label>Nombre y Apellido</FormControl.Label>
-                <Input placeholder="Nombre y Apellido" fontSize={20} />
+                <Input
+                  style={{color: 'white'}}
+                  placeholder="Nombre y Apellido" fontSize={20}
+                  onChangeText={setName}
+                  value={name}
+                />
               </FormControl>
               <FormControl>
                 <FormControl.Label>Telefono</FormControl.Label>
-                <Input placeholder="Ingresar su telefono" fontSize={20} />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Email</FormControl.Label>
-                <Input placeholder="Ingresar su email" fontSize={20} />
+                <Input
+                  style={{color: 'white'}}
+                  placeholder="Ingresar su telefono"
+                  fontSize={20}
+                  onChangeText={setPhone}
+                  value={phone}
+                  maxLength={13}
+                />
               </FormControl>
 
               <Button
@@ -164,9 +269,7 @@ const Signup = (props) => {
                 backgroundColor="#4BD1A0"
                 size="lg"
                 borderRadius={10}
-                onPress={() => {
-                  setStep(3);
-                }}
+                onPress={onContinue}
               >
                 Continuar
               </Button>
@@ -176,19 +279,47 @@ const Signup = (props) => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
-              <Input placeholder="Ingresa email" fontSize={20} />
+              <Input
+                style={{color: 'white'}}
+                placeholder="Ingresa email"
+                fontSize={20}
+                onChangeText={setEmail}
+                value={email}
+              />
             </FormControl>
             <FormControl>
               <FormControl.Label>RUC</FormControl.Label>
-              <Input placeholder="Ingresar RUC" fontSize={20} />
+              <Input
+                style={{color: 'white'}}
+                placeholder="Ingresar RUC"
+                fontSize={20}
+                onChangeText={setRuc}
+                value={ruc}
+                maxLength={13}
+                keyboardType={'numeric'}
+              />
             </FormControl>
             <FormControl>
               <FormControl.Label>Contraseña</FormControl.Label>
-              <Input placeholder="Ingresar contraseña" fontSize={20} />
+              <Input
+                style={{color: 'white'}}
+                placeholder="Ingresar contraseña"
+                fontSize={20}
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry
+              />
             </FormControl>
             <FormControl>
               <FormControl.Label>Confirmación contraseña</FormControl.Label>
-              <Input placeholder="Reingresar contraseña" fontSize={20} />
+              <Input
+                style={{color: 'white'}}
+                placeholder="Reingresar contraseña"
+                fontSize={20}
+                onChangeText={setConfirmPassword}
+                value={confirmPassword}
+                secureTextEntry
+              />
             </FormControl>
 
             <Button
@@ -197,7 +328,8 @@ const Signup = (props) => {
               size="lg"
               borderRadius={10}
               onPress={() => {
-                props.navigation.navigate("Main");
+                onContinue();
+
               }}
             >
               Continuar

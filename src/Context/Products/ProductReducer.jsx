@@ -1,7 +1,16 @@
-import { GET_PRODUCTS, GET_PRODUCT, ADD_TO_CART, DELETE_ITEM_CART, SUM_ALL, DELETE_ALL_CART, SERCH_PRODUCT, SERCH_VALUE } from "../types";
+import {
+  GET_PRODUCTS,
+  GET_PRODUCT,
+  ADD_TO_CART,
+  DELETE_ITEM_CART,
+  SUM_ALL,
+  DELETE_ALL_CART,
+  SERCH_PRODUCT,
+  SERCH_VALUE
+} from "../types";
 
 export default (state, action) => {
-  const { payload, type } = action;
+  const {payload, type} = action;
 
   switch (type) {
     case GET_PRODUCTS:
@@ -20,7 +29,7 @@ export default (state, action) => {
         ...state,
         cartArray: payload,
       };
-    case DELETE_ITEM_CART: 
+    case DELETE_ITEM_CART:
       return {
         ...state,
         cartArray: payload
@@ -35,12 +44,12 @@ export default (state, action) => {
         ...state,
         cartArray: payload
       }
-    case SERCH_PRODUCT: 
+    case SERCH_PRODUCT:
       return {
         ...state,
         productsArray: payload
       }
-    case SERCH_VALUE: 
+    case SERCH_VALUE:
       return {
         ...state,
         value: payload
