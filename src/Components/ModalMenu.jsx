@@ -4,18 +4,34 @@ import {
   TouchableOpacity,
   Pressable,
   StatusBar,
+  Alert,
 } from "react-native";
 import React from "react";
 import Modal from "react-native-modal";
 import { FONTS } from "../Constants";
-import { FontAwesome, Entypo, Feather, MaterialIcons, Ionicons, Octicons } from "@expo/vector-icons";
+import { FontAwesome, Entypo, Feather, MaterialIcons, Ionicons, Octicons, AntDesign } from "@expo/vector-icons";
 import { Flex, Text } from "native-base";
 import ButtonMenu from "./ButtonMenu";
 import { useNavigation } from "@react-navigation/native";
 
 const ModalMenu = (props) => {
-
-  const navigation = useNavigation()
+const navigation = useNavigation()
+const cerrarSesionAlert = () =>
+    Alert.alert("Arpitools", "Confirma Cierre de Sesión ?", [
+      {
+        text: "Cancelar",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        //TEST THIS
+        onPress: () => {
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('username');
+        },
+      },
+    ]); 
 
   return (
     <Modal
@@ -89,7 +105,10 @@ const ModalMenu = (props) => {
           <ButtonMenu icon={<FontAwesome name="credit-card" size={24} color="#4BD1A0" />} text='Metodo de pago' onPress={() => {props.onClose() ,navigation.navigate('PaymentMethod')}} />
           <ButtonMenu icon={<Ionicons name="md-megaphone-outline" size={24} color="#4BD1A0" />} text='Ayuda' onPress={() => {props.onClose() ,navigation.navigate('Help')}} />
           <ButtonMenu icon={<Feather name="info" size={24} color="#4BD1A0" />} text='Acerca de ArpiTools' onPress={() => {props.onClose() ,navigation.navigate('ArpiTools')}} />
-          
+          <ButtonMenu icon={<AntDesign name="logout" size={24} color="red" />} text='Salir' onPress={() => {
+            props.onClose() ,
+            navigation.navigate('ArpiTools')
+          }} />
         </Pressable>
       </Pressable>
     </Modal>

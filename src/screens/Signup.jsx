@@ -120,9 +120,9 @@ const Signup = (props) => {
       email: email,
       password: password,
       RUC: ruc,
-      address: address, // TODO Add address value here
+      address: address,
       arpicode: code,
-      distribuitor: true  // TODO Add distribuitor value here
+      distribuitor: true 
 
     }).then(res => {
       console.log('res', res)
@@ -264,7 +264,7 @@ const Signup = (props) => {
                 <FormControl.Label>Telefono</FormControl.Label>
                 <Input
                   style={{color: 'white'}}
-                  placeholder="Ingresar su telefono"
+                  placeholder="+59355555555"
                   fontSize={20}
                   onChangeText={setPhone}
                   value={phone}
