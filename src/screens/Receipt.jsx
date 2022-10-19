@@ -99,7 +99,7 @@ const Receipt = (props) => {
         </View>
         <FormControl px={10} mt={5}>
           <FormControl.Label>Dirección</FormControl.Label>
-          <Input placeholder="Ingrese su direccin de envio" fontSize={20} />
+          <Input placeholder="Ingrese su dirección de envio" fontSize={20} />
         </FormControl>
 
         <View style={{ paddingLeft: 40, marginTop: 30, marginBottom: 10 }}>

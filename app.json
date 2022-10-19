@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "ArteyPiso",
-    "slug": "ArteyPiso",
+    "slug": "arpi-tools",
+    "owner": "s00ar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,16 +19,23 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.s00ar.arpitools"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.s00ar.arpitools"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ebfc00cf-6286-4d50-9a02-2d30e7b9a4fe"
+      }
     }
   }
 }
