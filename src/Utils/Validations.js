@@ -4,76 +4,83 @@ import isLength from 'validator/lib/isLength';
 
 export const validateName = (name, isOptional = false) => {
   if (isEmpty(name) && !isOptional) {
-    return 'Name is required';
+    return 'El campo "nombre" no puede estar vacío';
   }
   return '';
 };
 
 export const validateType = (type, isOptional = false) => {
   if (isEmpty(type) && !isOptional) {
-    return 'Type is required';
+    return 'Tipo de negocio es requerido';
   }
   return '';
 };
 
 export const validateEmail = (email, isOptional = false) => {
   if (isEmpty(email) && !isOptional) {
-    return 'Email is required';
+    return 'El campo "email" no puede estar vacío';
   }
   if (!isEmail(email)) {
-    return 'invalid email';
+    return 'Email invalido';
+  }
+  return '';
+};
+
+export const validateAddress = (address, isOptional = false) => {
+  if (isEmpty(address) && !isOptional) {
+    return 'Campo "dirección" no puede estar vacío';
   }
   return '';
 };
 
 export const validatePassword = (password, isOptional = false) => {
   if (isEmpty(password) && !isOptional) {
-    return 'Password is required';
+    return 'Campo contraseña es requerido';
   }
   if (!isLength(password, {min: 6, max: undefined})) {
-    return 'Password must be at least 6 characters';
+    return 'La contraseña debe tener al menos 6 caracteres';
   }
   return '';
 };
 
 export const validateConfirmPassword = (password, confirmPassword, isOptional = false) => {
   if (isEmpty(confirmPassword) && !isOptional) {
-    return 'Confirm password is required';
+    return 'Confirmación de contraseña es requerida';
   }
   if (password !== confirmPassword) {
-    return 'Passwords do not match';
+    return 'Las contraseñas no coinciden';
   }
   return '';
 };
 
 export const validateCodeArpi = (code, isOptional = false) => {
   if (isEmpty(code) && !isOptional) {
-    return 'Code is required';
+    return 'El código es requerido';
   }
   if (!isLength(code, {min: 8, max: 8})) {
-    return 'Code must be 8 characters';
+    return 'El código dedbe tener al menos 8 caracteres';
   }
   return '';
 };
 
 export const validateRuc = (code, isOptional = false) => {
   if (isEmpty(code) && !isOptional) {
-    return 'RUC is required';
+    return 'El RUC es requerido';
   }
   if (!isLength(code, {min: 13, max: 13})) {
-    return 'RUC must be 13 characters';
+    return 'El RUC debe tener al menos 13 caracteres';
   }
   return '';
 };
 
 export const validatePhone = (phone, isOptional = false) => {
   if (isEmpty(phone) && !isOptional) {
-    return 'Phone is required';
+    return 'El campo "teléfono" no puede estar vacío';
   }
   const regex = /^(\+593|0)([2-7]|9[2-9])\d{7}$/;
   if(regex.test(phone)){
     return ''
   }
-  return 'Phone is invalid';
+  return 'El número telefónico es invalido';
 };
 

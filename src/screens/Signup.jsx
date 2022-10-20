@@ -24,9 +24,11 @@ import {
   validateConfirmPassword,
   validateEmail,
   validateName,
+  validateAddress,
   validatePassword,
   validatePhone,
-  validateRuc, validateType
+  validateRuc,
+  validateType
 } from "../Utils/Validations";
 import api from "../Services/Api";
 
@@ -52,6 +54,7 @@ const Signup = (props) => {
   const [ruc, setRuc] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [address, setAdress] = useState("");
 
   const onContinue = () => {
     const codeError = validateCodeArpi(code);
@@ -95,6 +98,11 @@ const Signup = (props) => {
       Alert.alert('Error', rucError)
       return;
     }
+    const addressError = validateAddress(address);
+    if (!isEmpty(addressError)) {
+      Alert.alert('Error', addressError)
+      return;
+    }
     const passwordError = validatePassword(password);
     if (!isEmpty(passwordError)) {
       Alert.alert('Error', passwordError)
@@ -107,14 +115,14 @@ const Signup = (props) => {
     }
 
     api.post('auth/local/register', {
-      username: name + ruc, // Add username value here
+      username: name + ruc,
       fullname: name,
       email: email,
       password: password,
       RUC: ruc,
-      address: "Evergreen ave 345, Dallas", // TODO Add address value here
+      address: address, // TODO Add address value here
       arpicode: code,
-      distribuitor: type === "ferreteria"  // TODO Add distribuitor value here
+      distribuitor: true  // TODO Add distribuitor value here
 
     }).then(res => {
       console.log('res', res)
@@ -297,6 +305,16 @@ const Signup = (props) => {
                 value={ruc}
                 maxLength={13}
                 keyboardType={'numeric'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Dirección</FormControl.Label>
+              <Input
+                style={{color: 'white'}}
+                placeholder="Ingrese su domicilio"
+                fontSize={20}
+                onChangeText={setAdress}
+                value={address}
               />
             </FormControl>
             <FormControl>

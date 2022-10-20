@@ -24,6 +24,7 @@ import PaymentMethod from "./src/screens/PaymentMethod";
 import Help from "./src/screens/Help";
 import ArpiTools from "./src/screens/ArpiTools";
 import MainHeader from "./src/Components/MainHeader";
+import Serches from "./src/screens/Serches";
 
 
 
@@ -40,7 +41,7 @@ export default function App() {
       <NavigationContainer>
         <ProductState>
           <Stack.Navigator>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="LogoPage"
               component={LogoPage}
               options={{
@@ -60,7 +61,7 @@ export default function App() {
               options={{
                 headerShown: false,
               }}
-            />
+            /> */}
             <Stack.Screen
               name="Main"
               component={Main}
@@ -136,6 +137,14 @@ export default function App() {
             <Stack.Screen
               name="ArpiTools"
               component={ArpiTools}
+              options={{
+                header: MainHeader,
+                headerTransparent: false,
+              }}
+            />
+            <Stack.Screen
+              name="Serches"
+              component={Serches}
               options={{
                 header: MainHeader,
                 headerTransparent: false,
