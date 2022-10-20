@@ -5,7 +5,7 @@
     "owner": "s00ar",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/1024x1024.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -24,18 +24,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/1024x1024-fondo transp.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.s00ar.arpitools"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "ebfc00cf-6286-4d50-9a02-2d30e7b9a4fe"
-      }
+      "favicon": "./assets/48x48.png"
     }
   }
 }

@@ -10,9 +10,10 @@ import ProductContext from "../Context/Products/ProductContext";
 
 const MainHeader = (props) => {
   const [show, setShow] = useState(false);
+  const [text, setText] = useState('')
   const navigation = useNavigation();
 
-  const { productArray, serchProduct, constProductArray, value, serchValue } = useContext(ProductContext)
+  const { cartArray, serchProduct, constProductArray, value, serchValue } = useContext(ProductContext)
 
   const filterSearch = (text) => {
     const newData = constProductArray.filter((item) => {
@@ -40,9 +41,9 @@ const MainHeader = (props) => {
             backgroundColor={"black"}
             color={"#cccccc"}
             _input={{
-              onSubmitEditing:() => navigation.navigate('Main') 
+              onSubmitEditing:() => {filterSearch(text) ,navigation.navigate('Serches')} 
             }}
-            onChangeText={(text) => filterSearch(text)}
+            onChangeText={(text) => setText(text)}
             InputLeftElement={
               <Icon
                 ml="2"
@@ -58,13 +59,13 @@ const MainHeader = (props) => {
             ) : (
               <Ionicons name="cart-outline" size={24} color="#4BD1A0" />
             )}
-            {/* {totalCart.total > 0 ? (
-              <View style={{backgroundColor: '#4BD1A0', borderRadius: 50, height: 'auto', width: 'auto', padding: 4}}>
-                <Text style={{color: '#cccccc'}}>${totalCart.total}</Text>
+            {cartArray.length > 0 ? (
+              <View style={{backgroundColor: 'transparent', borderRadius: 100, height: 'auto', width: 'auto', padding: 4, position: 'absolute', top: -14, right: -9}}>
+                <Text style={{color: '#4BD1A0', textAlign: 'center'}}>{cartArray.length}</Text>
               </View>
             ): (
               <></>
-            )} */}
+            )}
           </TouchableOpacity>
         </View>
       </View>
