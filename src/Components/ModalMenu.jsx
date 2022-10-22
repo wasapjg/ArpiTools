@@ -8,7 +8,7 @@ import {
 import React from "react";
 import Modal from "react-native-modal";
 import { FONTS } from "../Constants";
-import { FontAwesome, Entypo, Feather, MaterialIcons, Ionicons, Octicons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5, Entypo, Feather, MaterialIcons, Ionicons, Octicons } from "@expo/vector-icons";
 import { Flex, Text } from "native-base";
 import ButtonMenu from "./ButtonMenu";
 import { useNavigation } from "@react-navigation/native";
@@ -85,6 +85,7 @@ const ModalMenu = (props) => {
 
           {/* <ButtonMenu icon={<Feather name="shopping-bag" size={24} color="#4BD1A0" />} text='Mis compras' onPress={() => {props.onClose() ,navigation.navigate('Buys')}} /> */}
           {/* <ButtonMenu icon={<MaterialIcons name="favorite-border" size={24} color="#4BD1A0" />} text='Mis favoritos' onPress={() => {props.onClose() ,navigation.navigate('Favorites')}} /> */}
+          <ButtonMenu icon={<FontAwesome5 name="house-user" size={24} color="#4BD1A0" />} text='Inicio' onPress={() => {props.onClose() ,navigation.navigate('Main')}} />
           <ButtonMenu icon={<Octicons name="person" size={24} color="#4BD1A0" />} text='Mi cuenta' onPress={() => {props.onClose() ,navigation.navigate('MyAccount')}} />
           <ButtonMenu icon={<FontAwesome name="credit-card" size={24} color="#4BD1A0" />} text='Metodo de pago' onPress={() => {props.onClose() ,navigation.navigate('PaymentMethod')}} />
           <ButtonMenu icon={<Ionicons name="md-megaphone-outline" size={24} color="#4BD1A0" />} text='Ayuda' onPress={() => {props.onClose() ,navigation.navigate('Help')}} />
