@@ -24,21 +24,28 @@ const ItemsCart = () => {
     <View>
       {cartArray.length ? (
         cartArray.map((product) => (
-          <View key={product.product.id} style={{ flexDirection: "row", padding: 3 }}>
+          <View
+            key={product.product.id}
+            style={{ flexDirection: "row", padding: 3 }}
+          >
             <Image
-              source={{ uri: product.product.thumbnail }}
+              source={{
+                uri:
+                  "https://arpitools.com" +
+                  product.product.attributes.thumbnail.data.attributes.url,
+              }}
               alt="Imagen en carrito"
               style={{ width: 130, height: 130 }}
             />
             <Flex direction="column" ml={5} w={"60%"} justify={"space-around"}>
               <Box>
                 <Text style={[FONTS.body2, { color: "#cccccc" }]}>
-                  {product.product.title}
+                  {product.product.attributes.name}
                 </Text>
               </Box>
               <View>
                 <Text style={[FONTS.body3, { color: "#cccccc" }]}>
-                  $ {product.product.price}
+                  $ {product.product.attributes.price1}
                 </Text>
                 <View
                   style={{
@@ -59,7 +66,9 @@ const ItemsCart = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <Text style={{ textAlign: "center" }}>{product.quantity}</Text>
+                    <Text style={{ textAlign: "center" }}>
+                      {product.quantity}
+                    </Text>
                   </View>
                   <View
                     style={{
@@ -70,9 +79,15 @@ const ItemsCart = () => {
                       flex: 1,
                     }}
                   >
-                    <Text style={{ color: "#cccccc" }}>Total: ${product.quantity * product.product.price}</Text>
+                    <Text style={{ color: "#cccccc" }}>
+                      Total: ${product.quantity * product.product.attributes.price1}
+                    </Text>
                   </View>
-                  <TouchableOpacity onPress={() => {removeItem(product)}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      removeItem(product);
+                    }}
+                  >
                     <MaterialIcons name="delete" size={24} color="#CCCCCC" />
                   </TouchableOpacity>
                 </View>
@@ -82,7 +97,14 @@ const ItemsCart = () => {
         ))
       ) : (
         <>
-          <Text style={[FONTS.body2, { color: "#cccccc", textAlign: 'center', marginTop: 150 }]}>Carrito vacio</Text>
+          <Text
+            style={[
+              FONTS.body2,
+              { color: "#cccccc", textAlign: "center", marginTop: 150 },
+            ]}
+          >
+            Carrito vacio
+          </Text>
         </>
       )}
     </View>

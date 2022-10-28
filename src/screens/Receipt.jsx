@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React, { useState, useContext } from "react";
 import MainHeader from "../Components/MainHeader";
 import { FONTS } from "../Constants";
@@ -23,18 +30,51 @@ import {
 import DocPicker from "../Components/DocPicker";
 import ModalReceipt from "../Components/ModalReceipt";
 import ProductContext from "../Context/Products/ProductContext";
+import { isEmpty } from "lodash";
+import { validateAddress } from "../Utils/Validations";
+import api from "../Services/Api";
 
 const Receipt = (props) => {
+  const [address, setAdress] = useState("");
+  const [show, setShow] = useState(false);
+  const [data, setData] = useState("fake data");
+  const { totalCart, removeAllCart, cartArray } = useContext(ProductContext);
 
-  const [show, setShow] = useState(false)
+  const onSend = () => {
+    const addressError = validateAddress(address);
+    if (!isEmpty(addressError)) {
+      Alert.alert("Error", addressError);
+      return;
+    }
 
-  const { totalCart, removeAllCart } = useContext(ProductContext);
-
+    api.post("api/orders", {
+        users_permissions_user: data,
+        products: cartArray,
+        seller: data,
+        deliveryto: address,
+        amount: data,
+        productlist: data,
+        buyer: data,
+        buyeremail: data,
+        buyerphone: data,
+        buyersSellerName: data,
+        buyersSellersId: data,
+        buyerId: data,
+      })
+      .then((res) => {
+        console.log("res", res);
+        setShow(true);
+      })
+      .catch((error) => {
+        Alert.alert("Error", error.response.data.error.message);
+        console.error(error.response.data);
+      });
+  };
 
   return (
     <>
       <ScrollView style={{ backgroundColor: "#1a1b1a" }}>
-      <TouchableOpacity
+        <TouchableOpacity
           onPress={() => props.navigation.goBack()}
           style={{
             width: "100%",
@@ -43,7 +83,7 @@ const Receipt = (props) => {
             position: "relative",
             justifyContent: "center",
             alignItems: "center",
-            padding: 5
+            padding: 5,
           }}
         >
           <Entypo
@@ -94,12 +134,19 @@ const Receipt = (props) => {
               width: "45%",
             }}
           >
-            <Text style={[FONTS.h2, { color: "#cccccc" }]}>Total: {totalCart.total}</Text>
+            <Text style={[FONTS.h2, { color: "#cccccc" }]}>
+              Total: {totalCart.total}
+            </Text>
           </View>
         </View>
         <FormControl px={10} mt={5}>
           <FormControl.Label>Dirección</FormControl.Label>
-          <Input placeholder="Ingrese su dirección de envio" fontSize={20} />
+          <Input
+            placeholder="Ingrese su dirección de envio"
+            fontSize={20}
+            onChangeText={setAdress}
+            value={address}
+          />
         </FormControl>
 
         <View style={{ paddingLeft: 40, marginTop: 30, marginBottom: 10 }}>
@@ -118,9 +165,7 @@ const Receipt = (props) => {
           <Text style={[FONTS.h2, { color: "#cccccc" }]}>
             Subir comprobante de
           </Text>
-          <Text style={[FONTS.h2, { color: "#cccccc" }]}>
-            pago realizado
-          </Text>
+          <Text style={[FONTS.h2, { color: "#cccccc" }]}>pago realizado</Text>
         </View>
 
         <DocPicker />
@@ -135,19 +180,21 @@ const Receipt = (props) => {
           w="60%"
           p="1"
           alignSelf={"center"}
-          onPress={() => setShow(true)}
+          onPress={onSend}
           _text={{
-            color: '#000000',
+            color: "#000000",
             fontSize: 20,
-            fontWeight: 'bold'
+            fontWeight: "bold",
           }}
         >
           Enviar
         </Button>
       </ScrollView>
-      <ModalReceipt 
+      <ModalReceipt
         visible={show}
-        onClose={ () => {setShow(false), props.navigation.navigate('Main'), removeAllCart()} }
+        onClose={() => {
+          setShow(false), props.navigation.navigate("Main"), removeAllCart();
+        }}
       />
     </>
   );

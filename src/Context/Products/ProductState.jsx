@@ -1,6 +1,6 @@
 import React, { useReducer, useRef } from "react";
 import axios from "axios";
-// import config from "../../config";
+import config from "../../config";
 
 import ProductContext from "./ProductContext";
 import { RemoveCartContext } from "./ProductContext";
@@ -27,31 +27,12 @@ const ProductState = (props) => {
   itemRef.current = state.cartArray;
 
 
-  // const getProducts = async () => {
-  //   try {
-  //     const res = await axios.get(`${config.api.endpoint}` + 'products?populate=*');
-  //     // "https://dummyjson.com/products/"
-  //     const data = res.data.data;
-  //     dispatch({ type: GET_PRODUCTS, payload: data });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const getProduct = async (id) => {
-  //   try {
-  //     const res = await axios.get(`${config.api.endpoint}` + 'products/' + id + '?populate=*');
-  //     const { data } = res;
-  //     dispatch({ type: GET_PRODUCT, payload: data });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const getProducts = async () => {
+    console.log(`${config.api.endpoint}` + 'products?populate=*');
     try {
-      const res = await axios.get("https://dummyjson.com/products/");
-      const data = res.data.products;
+      const res = await axios.get(`${config.api.endpoint}` + 'products?populate=*');
+      // "https://dummyjson.com/products/"
+      const data = res.data.data;
       dispatch({ type: GET_PRODUCTS, payload: data });
     } catch (error) {
       console.log(error);
@@ -60,13 +41,33 @@ const ProductState = (props) => {
 
   const getProduct = async (id) => {
     try {
-      const res = await axios.get("https://dummyjson.com/products/" + id);
-      const { data } = res;
+      const res = await axios.get(`${config.api.endpoint}` + 'products/' + id + '?populate=*');
+      const { data } = res.data;
       dispatch({ type: GET_PRODUCT, payload: data });
     } catch (error) {
       console.log(error);
     }
   };
+
+  // const getProducts = async () => {
+  //   try {
+  //     const res = await axios.get("https://dummyjson.com/products/");
+  //     const data = res.data.products;
+  //     dispatch({ type: GET_PRODUCTS, payload: data });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const getProduct = async (id) => {
+  //   try {
+  //     const res = await axios.get("https://dummyjson.com/products/" + id);
+  //     const { data } = res;
+  //     dispatch({ type: GET_PRODUCT, payload: data });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const serchProduct = async (product) => {
     let arr = []

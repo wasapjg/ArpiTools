@@ -39,7 +39,7 @@ const Cart = ( props ) => {
   // console.log( 'TOTALARR _____________' ,totalArr);
 
   for(i = 0; i < cartArray.length; i++) {
-    totalArr.push(cartArray[i].product.price * cartArray[i].quantity)
+    totalArr.push(cartArray[i].product.attributes.price1 * cartArray[i].quantity)
   }
 
   let total = totalArr.reduce((a, b) => a + b, 0)

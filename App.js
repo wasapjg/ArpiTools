@@ -41,7 +41,7 @@ export default function App() {
       <NavigationContainer>
         <ProductState>
           <Stack.Navigator>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="LogoPage"
               component={LogoPage}
               options={{
@@ -61,7 +61,7 @@ export default function App() {
               options={{
                 headerShown: false,
               }}
-            />
+            /> */}
             <Stack.Screen
               name="Main"
               component={Main}
