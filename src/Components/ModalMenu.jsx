@@ -13,10 +13,20 @@ import { FontAwesome, FontAwesome5, Entypo, Feather, MaterialIcons, Ionicons, Oc
 import { Flex, Text } from "native-base";
 import ButtonMenu from "./ButtonMenu";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoginEmail from "../screens/LoginEmail";
+
 
 const ModalMenu = (props) => {
-const navigation = useNavigation()
-const cerrarSesionAlert = () =>
+  const navigation = useNavigation()
+
+  const logoutArpitools = () => {
+      AsyncStorage.removeItem('@STORAGE_USER');
+      AsyncStorage.clear();
+      navigation.navigate("LoginEmail");
+  }
+  
+  const cerrarSesionAlert = () =>
     Alert.alert("Arpitools", "Confirma Cierre de Sesión ?", [
       {
         text: "Cancelar",
@@ -25,10 +35,8 @@ const cerrarSesionAlert = () =>
       },
       {
         text: "OK",
-        //TEST THIS
         onPress: () => {
-            localStorage.removeItem('jwt');
-            localStorage.removeItem('username');
+            logoutArpitools();
         },
       },
     ]); 
@@ -107,8 +115,7 @@ const cerrarSesionAlert = () =>
           <ButtonMenu icon={<Ionicons name="md-megaphone-outline" size={24} color="#4BD1A0" />} text='Ayuda' onPress={() => {props.onClose() ,navigation.navigate('Help')}} />
           <ButtonMenu icon={<Feather name="info" size={24} color="#4BD1A0" />} text='Acerca de ArpiTools' onPress={() => {props.onClose() ,navigation.navigate('ArpiTools')}} />
           <ButtonMenu icon={<AntDesign name="logout" size={24} color="red" />} text='Salir' onPress={() => {
-            props.onClose() ,
-            navigation.navigate('ArpiTools')
+            cerrarSesionAlert();
           }} />
         </Pressable>
       </Pressable>

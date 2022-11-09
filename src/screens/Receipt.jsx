@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import MainHeader from "../Components/MainHeader";
 import { FONTS } from "../Constants";
 import {
@@ -32,42 +32,99 @@ import ModalReceipt from "../Components/ModalReceipt";
 import ProductContext from "../Context/Products/ProductContext";
 import { isEmpty } from "lodash";
 import { validateAddress } from "../Utils/Validations";
-import api from "../Services/Api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+
 
 const Receipt = (props) => {
+  //para recuperar los datos almacenados del usuario actual
+  const [token, setToken] = useState();
+  const [userid, setUserid] = useState();
+  const [useremail, setUseremail] = useState();
+  const [userfullname, setUserfullname] = useState();
+  const [sellerid, setSellerid] = useState();
+  const [sellername, setSellername] = useState();
+  const [sellerphone, setSellerphone] = useState();
+  //
+
   const [address, setAdress] = useState("");
   const [show, setShow] = useState(false);
   const [data, setData] = useState("fake data");
   const { totalCart, removeAllCart, cartArray } = useContext(ProductContext);
 
+
+  //recuperamos los datos almacenados del usuario logeado
+  const getDataUser = () => {
+    try {
+        AsyncStorage.getItem('@STORAGE_USER')
+            .then(value => {
+                if (value != null) {
+                    let user = JSON.parse(value);
+                    setToken(user.Token)
+                    setUserid(user.UserId)
+                    setUserfullname(user.FullName);
+                    setUseremail(user.UserEmail);
+                    setSellerid(user.SellerId);
+                    setSellername(user.SellerName);
+                    setSellerphone(user.SellerPhone);
+                }
+            })
+    } catch (error) {
+        console.log("Error in getDataUser => " + error);
+    }
+  }//end getDataUser
+
+  useEffect(() => {
+    getDataUser();
+  }, []);
+
+
   const onSend = () => {
+
     const addressError = validateAddress(address);
+    
     if (!isEmpty(addressError)) {
       Alert.alert("Error", addressError);
       return;
     }
 
-    api.post("api/orders", {
-        users_permissions_user: data,
-        products: cartArray,
-        seller: data,
-        deliveryto: address,
-        amount: data,
-        productlist: data,
-        buyer: data,
-        buyeremail: data,
-        buyerphone: data,
-        buyersSellerName: data,
-        buyersSellersId: data,
-        buyerId: data,
-      })
+    var productoArray = cartArray.map(function(obj){
+      var rObj = {};
+      rObj["id"] = obj.product.id;
+      return rObj;
+   });
+
+    const postData = {
+      "data": {
+        "users_permissions_user": userid,
+        "products": productoArray,
+        "seller": sellerid,
+        "deliveryto": `${address}`,
+        "amount": `${totalCart.total}`,
+        "productlist": JSON.stringify(cartArray, ['product', 'id', 'attributes', 'name']),
+        "buyer": `${userfullname}`,
+        "buyeremail": `${useremail}`,
+        "buyerphone": sellerphone,
+        "buyersSellerName": `${sellername}`,
+        "buyersSellersId": sellerid,
+        "buyerId": userid
+      }
+    };
+    
+    const axiosConfig = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${ token }`
+      }
+    };
+    
+    axios.post("https://arpitools.com/api/orders", postData, axiosConfig)
       .then((res) => {
-        console.log("res", res);
         setShow(true);
       })
       .catch((error) => {
-        Alert.alert("Error", error.response.data.error.message);
-        console.error(error.response.data);
+        Alert.alert("Error", error.message);
+        console.error(error.message);
       });
   };
 

@@ -23,11 +23,66 @@ import {postUser} from "../Action/postUser";
 import {validateEmail, validatePassword} from "../Utils/Validations";
 import {isEmpty} from "lodash";
 import api from "../Services/Api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const LoginEmail = (props) => {
   const [forgot, setForgot] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  //obtenemos los datos del usuario actual
+  const getAxiosUser = async ( value ) => {
+    await axios.get('https://arpitools.com/api/users/me?populate=*', {
+      headers: {
+          Authorization: `Bearer ${ value }`
+        }
+      })
+        .then(res => {
+          setDataUser(value, res.data.id, res.data.fullname, res.data.email, res.data.seller.id, res.data.seller.name, res.data.seller.phone)
+        })
+        .catch(err => {
+          console.error("Error getAxiosUser => " + err.message)
+        }
+    )
+  }// end getAxiosUser
+
+
+  //almacenamos todos los datos de usuario actual para utilizarlos en la orden de compra
+  const setDataUser = async ( value, id, fullname, email, sellerid, sellername, sellerphone) => {
+    try {
+      var user = {
+        Token: value,
+        UserId: id,
+        FullName: fullname,
+        UserEmail: email,
+        SellerId: sellerid,
+        SellerName: sellername,
+        SellerPhone: sellerphone
+      }
+      await AsyncStorage.setItem('@STORAGE_USER', JSON.stringify(user));
+    } catch (error) {
+      console.log("Error setDataUser => " + error);
+    }
+  }//end setDataUser
+
+
+  const authUser = async () => {
+    await api.post('auth/local', {
+        identifier: email,
+        password
+      }
+    ).then(res => {
+        getAxiosUser(res.data.jwt)
+        props.navigation.navigate("Main");
+      }
+    ).catch(err => {
+        Alert.alert('Error', err.response.data.error.message)
+        console.error("Error authUser => " + err.message)
+      }
+    )
+  }//end authUser
 
   const onContinue = async () => {
     if (forgot) {
@@ -36,7 +91,20 @@ const LoginEmail = (props) => {
         Alert.alert('Error', emailError)
         return;
       }
-      props.navigation.navigate("Main");
+      setLoading(true);
+      api.post('auth/forgot-password', {
+        email,
+      }).then(res => {
+        setLoading(false);
+        console.log('res',res)
+        Alert.alert('Success', 'Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder.')
+      }).catch(err => {
+        setLoading(false);
+        Alert.alert('Error', err.response.data.error.message)
+        console.error(err.response.data)
+      })
+
+      // props.navigation.navigate("Main");
     } else {
       const emailError = validateEmail(email);
       if (!isEmpty(emailError)) {
@@ -58,6 +126,8 @@ const LoginEmail = (props) => {
         Alert.alert('Error', err.response.data.error.message)
         console.error(err.response.data)
       })
+
+      authUser();
 
     }
   }
@@ -112,8 +182,9 @@ const LoginEmail = (props) => {
               size="lg"
               borderRadius={10}
               onPress={onContinue}
+              disabled={loading}
             >
-              Continuar
+              {loading ? 'Please wait...' : 'Continuar'}
             </Button>
             <HStack mt="6" justifyContent="center">
               <Text style={{color: "white"}}>No tienes una cuenta?</Text>
